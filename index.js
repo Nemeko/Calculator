@@ -19,51 +19,45 @@ const alu = {
     dividir(a,b){
         return a/b
     },
-    calcular(operator,a,b){
-        let resultado;
-        operator == "NumpadAdd" ? resultado = (this.sumar(a,b)):"";
-        operator == "NumpadSubtract" ? resultado = this.restar(a,b):"";
-        operator == "NumpadMultiply" ? resultado = this.multiplicar(a,b):"";
-        operator == "NumpadDivide" ? resultado = this.dividir(a,b):"";
-        return resultado
+    calcular(operator,numero){
+        operator == "NumpadAdd" ? numero[0] = this.sumar(numero[1],numero[2]):"";
+        operator == "NumpadSubtract" ? numero[0] = this.restar(numero[1],numero[2]):"";
+        operator == "NumpadMultiply" ? numero[0] = this.multiplicar(numero[1],numero[2]):"";
+        operator == "NumpadDivide" ? numero[0] = this.dividir(numero[1],numero[2]):"";
+        console.log("%c RESULTADO -> "+numero[0],"color:lightgreen")
+        this.mostrar(numero[0])
+        numero[1] = numero[0];
+        numero[2] = 0;
+        return numero
+    },
+    mostrar(a){
+        display.textContent = a; 
     },
 }
 
-
+//-------- Evento cuando se presiona el teclado 
 calculadora.addEventListener("keydown", e => { 
-    e.key >= 0 && e.key <= 9 ? numero[idx] += e.key:""//numero.push(e.key) :"";
-    numero[idx] = parseFloat(numero[idx])      //convierte el string en numero
-    // console.log("Num 1: "+numero[1] + " -- Num 2: "+ numero[2])
-
-    if(e.code == "NumpadAdd" || e.code == "NumpadSubtract" || e.code == "NumpadMultiply" || e.code == "NumpadDivide"){
-        if (operador != e.code && idx ==2 && numero[2] != 0){
-            console.log("--- %c Dentro del IF para mandar operacion al ALU -> idx = "+idx,"color:yellow"); 
-            numero[0] = alu.calcular(operador, numero[1],numero[2])
-            numero[1] = numero[0];
-            numero[2] = 0;
-            operador = e.code
-        }else if (idx ==2 && numero[2] != 0){
-            console.log("--- %c Dentro del IF para mandar operacion al ALU -> idx = "+idx, "color:orange"); 
-            numero[0] = alu.calcular(operador, numero[1],numero[2])
-            numero[1] = numero[0];
-            numero[2] = 0;
+    if(e.key >= 0 && e.key <= 9){
+        numero[idx] += e.key
+        numero[idx] = parseFloat(numero[idx])
+        alu.mostrar(numero[idx]);
+    }
+    
+//-------- Logica de botones - teclado
+    console.log("Numero 1: "+numero[1]+"  -- Numero 2: "+numero[2]+"  --%c Operador: "+e.code,"color:yellow","  -- Buffer: "+numero[0]);
+    if(e.code == "NumpadAdd" || e.code == "NumpadSubtract" || e.code == "NumpadMultiply" || e.code == "NumpadDivide" || e.code == "NumpadEnter"){
+        if (operador != e.code && idx == 2 && numero[2] != 0 && e.code != "NumpadEnter"){ 
+            numero = alu.calcular(operador, numero)
+            operador = e.code     
+        }else if ((idx == 2 && numero[2] != 0) || e.code == "NumpadEnter"){
+            numero = alu.calcular(operador, numero)
         }else if(idx == 1){
-            idx = 2;
-            console.log("--- %c Dentro del IF idx -> idx = "+idx,"color:lightblue"); 
             operador = e.code
+            idx = 2;
         }else{
             operador = e.code
         }
-        
     }
-    console.log("Numero 1: "+numero[1]+"  -- Numero 2: "+numero[2]+"  --%c Operador: "+operador,"color:yellow","  -- Buffer: "+numero[0]);
-    if(e.code == "NumpadEnter"){                                        // NO ESTA HACIENDO EL CALCULO PORQUE ENTER NO DISPARA LA FUNCION MATEMATICA
-        numero[0] = alu.calcular(operador, numero[1],numero[2])
-        numero[1] = numero[0];
-        numero[2] = 0;
-        console.log("%c RESULTADO -> "+numero[1],"color:lightgreen")
-    }
-
 })
 
 
