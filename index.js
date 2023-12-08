@@ -59,7 +59,7 @@ const alu = {
     },
 }
 
-// ============ Liteners ===========
+// ============ Listeners ===========
 calculadora.addEventListener("keydown", e => {
     e.preventDefault()
     alu.detecTecla(e.key)
