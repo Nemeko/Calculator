@@ -2,7 +2,7 @@
 let calculadora = document.querySelector("*")
 let display = document.querySelector("#lcd")
 let teclado = document.querySelector(".teclado")
-let numero = [0,0,0]
+let numero = [0,"",0]
 let idx = 1
 let operador = ""
 
@@ -35,9 +35,23 @@ const alu = {
         console.log("%cTecla: "+tecla,"color:yellow")
         if(tecla >= 0 && tecla <= 9){
             numero[idx] += tecla
-            numero[idx] = parseFloat(numero[idx])
+            let decimal = numero[idx].length
+            if(numero[idx].indexOf(".") == -1){
+                console.log("Convirtiendo a numero - 1er IF")
+                numero[idx] = parseFloat(numero[idx])
+            }else if(numero[idx][decimal-1] != "0"){
+                    console.log("Convirtiendo a numero")
+                    numero[idx] = parseFloat(numero[idx])
+                    // numero[idx] = Number(numero[idx].toFixed())
+            }
             this.mostrar(numero[idx]);
-        }    
+        }
+        //-------- Logica del "."
+        if(tecla == "."){
+            numero[idx] += "."
+            this.mostrar(numero[idx]);
+        }
+
         //-------- Logica de botones
         if(tecla == "=" || tecla == "Enter" || tecla == "+" || tecla == "-" || tecla == "*" || tecla == "/"){ 
             if (operador != tecla && idx == 2 && numero[2] != 0 && tecla != "Enter"){ 
